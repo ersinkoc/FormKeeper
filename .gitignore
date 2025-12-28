@@ -34,6 +34,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+.claude/
 
 # Temporary
 tmp/
@@ -48,3 +49,6 @@ test-results/
 website/node_modules/
 website/dist/
 website/.vite/
+
+# Project planning docs (internal use only)
+.project/

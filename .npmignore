@@ -8,14 +8,16 @@ website/
 *.config.ts
 *.config.js
 tsconfig.json
+tsconfig.test.json
 vitest.config.ts
 tsup.config.ts
 
-# Documentation (keep only essential)
-SPECIFICATION.md
-IMPLEMENTATION.md
-TASKS.md
-PROJECT.md
+# Documentation (keep only in package)
+docs/
+*.md
+!README.md
+!LICENSE
+!CHANGELOG.md
 
 # Development
 .git/
@@ -23,6 +25,8 @@ PROJECT.md
 node_modules/
 coverage/
 .vitest/
+.project/
+.claude/
 
 # IDE
 .vscode/
@@ -44,3 +48,6 @@ Thumbs.db
 tmp/
 temp/
 *.tmp
+
+# Build artifacts
+*.tsbuildinfo
