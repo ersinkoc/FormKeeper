@@ -1,0 +1,46 @@
+# Source files
+src/
+tests/
+examples/
+website/
+
+# Config files
+*.config.ts
+*.config.js
+tsconfig.json
+vitest.config.ts
+tsup.config.ts
+
+# Documentation (keep only essential)
+SPECIFICATION.md
+IMPLEMENTATION.md
+TASKS.md
+PROJECT.md
+
+# Development
+.git/
+.github/
+node_modules/
+coverage/
+.vitest/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+tmp/
+temp/
+*.tmp
