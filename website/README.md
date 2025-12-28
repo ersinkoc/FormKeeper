@@ -69,7 +69,7 @@ website/
 │   │   ├── ui/        # shadcn/ui components
 │   │   ├── layout/    # Header, Footer
 │   │   ├── code-block.tsx
-│   │   ├── live-preview.tsx
+│   │   ├── code-runner.tsx
 │   │   └── theme-provider.tsx
 │   ├── pages/         # Route pages
 │   │   ├── home.tsx
