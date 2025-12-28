@@ -1,5 +1,4 @@
-import { describe, test, expect } from 'vitest'
-import { parsePath, deepGet, deepSet } from '../../../src/utils/path'
+import { parsePath, deepGet, deepSet } from '@/utils/path'
 
 describe('parsePath', () => {
   test('parses dot notation', () => {

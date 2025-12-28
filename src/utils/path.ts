@@ -60,8 +60,13 @@ export function deepSet(obj: any, path: string, value: any): void {
     const key = keys[i]!
     const nextKey = keys[i + 1]!
 
-    // Create intermediate object or array if needed
-    if (!(key in current) || current[key] === null || current[key] === undefined) {
+    // Create intermediate object or array if needed, or overwrite non-object values
+    if (
+      !(key in current) ||
+      current[key] === null ||
+      current[key] === undefined ||
+      typeof current[key] !== 'object'
+    ) {
       // Check if next key is a number to decide between array or object
       current[key] = /^\d+$/.test(nextKey) ? [] : {}
     }

@@ -1,4 +1,3 @@
-import { describe, test, expect, beforeEach } from 'vitest'
 import { generateId, resetCounter } from '../../../src/utils/uid'
 
 describe('generateId', () => {

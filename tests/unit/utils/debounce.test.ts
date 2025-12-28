@@ -1,4 +1,3 @@
-import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import { debounce } from '../../../src/utils/debounce'
 
 describe('debounce', () => {

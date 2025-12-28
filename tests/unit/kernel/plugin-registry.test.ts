@@ -1,4 +1,3 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { PluginRegistry } from '@/kernel/plugin-registry'
 import { EventBus } from '@/kernel/event-bus'
 import type { Plugin } from '@/types'

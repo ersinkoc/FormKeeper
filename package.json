@@ -31,29 +31,29 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./plugins": {
+      "types": "./dist/plugins/index.d.ts",
       "import": "./dist/plugins/index.js",
-      "require": "./dist/plugins/index.cjs",
-      "types": "./dist/plugins/index.d.ts"
+      "require": "./dist/plugins/index.cjs"
     },
     "./react": {
+      "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js",
-      "require": "./dist/react/index.cjs",
-      "types": "./dist/react/index.d.ts"
+      "require": "./dist/react/index.cjs"
     },
     "./vue": {
+      "types": "./dist/vue/index.d.ts",
       "import": "./dist/vue/index.js",
-      "require": "./dist/vue/index.cjs",
-      "types": "./dist/vue/index.d.ts"
+      "require": "./dist/vue/index.cjs"
     },
     "./svelte": {
+      "types": "./dist/svelte/index.d.ts",
       "import": "./dist/svelte/index.js",
-      "require": "./dist/svelte/index.cjs",
-      "types": "./dist/svelte/index.d.ts"
+      "require": "./dist/svelte/index.cjs"
     }
   },
   "files": [

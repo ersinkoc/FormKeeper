@@ -5,6 +5,7 @@
 
 import { useRef, useEffect, useSyncExternalStore, useCallback } from 'react'
 import { createForm, type Form } from '../../create-form'
+import { deepEqual } from '../../utils/deep-equal'
 import type {
   FormOptions,
   FieldValues,
@@ -40,6 +41,9 @@ export function useForm<TValues extends FieldValues = FieldValues>(
 
   const form = formRef.current
 
+  // Cache the snapshot to prevent unnecessary re-renders
+  const snapshotRef = useRef<FormState<TValues> | null>(null)
+
   // Subscribe to form state changes
   const subscribe = useCallback(
     (callback: () => void) => {
@@ -48,8 +52,8 @@ export function useForm<TValues extends FieldValues = FieldValues>(
     [form]
   )
 
-  const getSnapshot = useCallback(
-    (): FormState<TValues> => ({
+  const getSnapshot = useCallback((): FormState<TValues> => {
+    const newSnapshot: FormState<TValues> = {
       values: form.getValues(),
       errors: form.getErrors(),
       touched: form.getTouched(),
@@ -58,61 +62,61 @@ export function useForm<TValues extends FieldValues = FieldValues>(
       isSubmitting: form.isSubmitting(),
       isSubmitSuccessful: form.isSubmitSuccessful(),
       submitCount: form.getSubmitCount(),
-    }),
-    [form]
-  )
+    }
+
+    // Only return a new object if the snapshot actually changed
+    if (!snapshotRef.current || !deepEqual(snapshotRef.current, newSnapshot)) {
+      snapshotRef.current = newSnapshot
+    }
+
+    return snapshotRef.current
+  }, [form])
 
   const formState = useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
 
   // Emit state-change events on value/error changes
   useEffect(() => {
-    const unsubscribeChange = form.on('change', () => {
+    const emitStateChange = () => {
       form.emit({
         type: 'state-change',
-        state: getSnapshot(),
         timestamp: Date.now(),
       } as any)
-    })
+    }
 
-    const unsubscribeValidate = form.on('validate', () => {
-      form.emit({
-        type: 'state-change',
-        state: getSnapshot(),
-        timestamp: Date.now(),
-      } as any)
-    })
-
-    const unsubscribeSubmit = form.on('submit', () => {
-      form.emit({
-        type: 'state-change',
-        state: getSnapshot(),
-        timestamp: Date.now(),
-      } as any)
-    })
-
-    const unsubscribeSubmitSuccess = form.on('submit-success', () => {
-      form.emit({
-        type: 'state-change',
-        state: getSnapshot(),
-        timestamp: Date.now(),
-      } as any)
-    })
+    const unsubscribeChange = form.on('change', emitStateChange)
+    const unsubscribeValidate = form.on('validate', emitStateChange)
+    const unsubscribeSubmit = form.on('submit', emitStateChange)
+    const unsubscribeSubmitSuccess = form.on('submit-success', emitStateChange)
+    const unsubscribeReset = form.on('reset', emitStateChange)
 
     return () => {
       unsubscribeChange()
       unsubscribeValidate()
       unsubscribeSubmit()
       unsubscribeSubmitSuccess()
+      unsubscribeReset()
     }
-  }, [form, getSnapshot])
+  }, [form])
+
+  // Create a stable returnValue reference
+  const returnValueRef = useRef<UseFormReturn<TValues> | null>(null)
+
+  // Create the return value once
+  if (!returnValueRef.current) {
+    returnValueRef.current = {
+      ...form,
+      formState: snapshotRef.current!,
+      destroy: () => form.destroy(),
+    } as UseFormReturn<TValues>
+  }
+
+  // Update formState on the existing object
+  returnValueRef.current.formState = formState
 
   // Cleanup on unmount
   useEffect(() => {
-    return () => form.destroy()
-  }, [form])
+    return () => returnValueRef.current!.destroy()
+  }, [])
 
-  return {
-    ...form,
-    formState,
-  }
+  return returnValueRef.current
 }
