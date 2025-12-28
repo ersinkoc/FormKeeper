@@ -217,6 +217,10 @@ function getFormKeeperSource(): string {
         };
       };
 
+      const subscribe = (callback) => {
+        return eventBus.on('change', callback);
+      };
+
       const handleSubmit = async (e) => {
         e?.preventDefault?.();
         isSubmitting = true;
@@ -274,6 +278,8 @@ function getFormKeeperSource(): string {
         isDirty,
         isSubmitting: () => isSubmitting,
         useFieldArray,
+        subscribe,
+        eventBus,
       };
     }
 
@@ -302,6 +308,8 @@ function getFormKeeperSource(): string {
         getErrors: form.getErrors,
         getTouched: form.getTouched,
         getError: form.getError,
+        subscribe: form.subscribe,
+        eventBus: form.eventBus,
         // Direct property access for template compatibility
         errors: form.getErrors(),
         values: form.getValues(),
@@ -311,6 +319,35 @@ function getFormKeeperSource(): string {
           isValid: form.isValid(),
           isDirty: form.isDirty(),
         },
+      };
+    }
+
+    function useFieldArray({ form, name }) {
+      const [, forceUpdate] = useState({});
+
+      useEffect(() => {
+        const unsubscribe = form.subscribe(() => {
+          forceUpdate({});
+        });
+        return unsubscribe;
+      }, [form]);
+
+      const formInstance = form.register ? form : (form.current || form);
+      const values = formInstance.getValues ? formInstance.getValues() : formInstance.values || {};
+      const array = deepGet(values, name) || [];
+
+      return {
+        fields: array.map((item, index) => ({ ...item, id: String(index) })),
+        append: (item) => {
+          const current = deepGet(formInstance.getValues(), name) || [];
+          deepSet(formInstance.getValues(), name, [...current, item]);
+          formInstance.eventBus.emit('change', { name });
+        },
+        remove: (index) => {
+          const current = deepGet(formInstance.getValues(), name) || [];
+          deepSet(formInstance.getValues(), name, current.filter((_, i) => i !== index));
+          formInstance.eventBus.emit('change', { name });
+        }
       };
     }
   `;
