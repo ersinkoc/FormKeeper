@@ -294,7 +294,24 @@ function getFormKeeperSource(): string {
         return unsubscribe;
       }, []);
 
-      return form;
+      return {
+        register: form.register,
+        handleSubmit: form.handleSubmit,
+        useFieldArray: form.useFieldArray,
+        getValues: form.getValues,
+        getErrors: form.getErrors,
+        getTouched: form.getTouched,
+        getError: form.getError,
+        // Direct property access for template compatibility
+        errors: form.getErrors(),
+        values: form.getValues(),
+        touched: form.getTouched(),
+        formState: {
+          isSubmitting: form.isSubmitting(),
+          isValid: form.isValid(),
+          isDirty: form.isDirty(),
+        },
+      };
     }
   `;
 }
