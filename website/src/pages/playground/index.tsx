@@ -3,9 +3,9 @@ import Editor from '@monaco-editor/react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Play, RotateCcw, Download } from 'lucide-react'
+import { Play, RotateCcw, Download, AlertCircle } from 'lucide-react'
 import { useTheme } from '@/components/theme-provider'
-import { LivePreview } from '@/components/live-preview'
+import { CodeRunner } from '@/components/code-runner'
 
 const defaultCode = `import { useForm } from '@oxog/formkeeper/react'
 
@@ -212,23 +212,37 @@ export default TodoList`,
 export function PlaygroundPage() {
   const { theme } = useTheme()
   const [code, setCode] = useState(defaultCode)
-  const [currentTemplate, setCurrentTemplate] = useState<'basic' | 'login' | 'array'>('basic')
   const [isPreviewActive, setIsPreviewActive] = useState(false)
+  const [consoleOutput, setConsoleOutput] = useState<string[]>([])
+  const [error, setError] = useState<string | null>(null)
 
   const handleReset = () => {
     setCode(defaultCode)
-    setCurrentTemplate('basic')
     setIsPreviewActive(false)
+    setConsoleOutput([])
+    setError(null)
   }
 
   const handleRun = () => {
     setIsPreviewActive(true)
+    setConsoleOutput(['▶ Running code...'])
+    setError(null)
   }
 
-  const handleTemplateChange = (name: string, templateCode: string) => {
+  const handleTemplateChange = (templateCode: string) => {
     setCode(templateCode)
-    setCurrentTemplate(name as 'basic' | 'login' | 'array')
     setIsPreviewActive(false)
+    setConsoleOutput([])
+    setError(null)
+  }
+
+  const handleError = (errorMessage: string) => {
+    setError(errorMessage)
+    setConsoleOutput(prev => [...prev, `❌ Error: ${errorMessage}`])
+  }
+
+  const handleConsole = (message: string) => {
+    setConsoleOutput(prev => [...prev, `  ${message}`])
   }
 
   const handleDownload = () => {
@@ -258,9 +272,9 @@ export function PlaygroundPage() {
             {Object.entries(templates).map(([name, templateCode]) => (
               <Button
                 key={name}
-                variant={currentTemplate === name ? 'default' : 'outline'}
+                variant="outline"
                 size="sm"
-                onClick={() => handleTemplateChange(name, templateCode)}
+                onClick={() => handleTemplateChange(templateCode)}
               >
                 {name.charAt(0).toUpperCase() + name.slice(1)}
               </Button>
@@ -334,9 +348,30 @@ export function PlaygroundPage() {
                 </TabsList>
                 <TabsContent value="preview" className="mt-0 h-full">
                   {isPreviewActive ? (
-                    <div className="h-full overflow-auto">
-                      <LivePreview template={currentTemplate} />
-                    </div>
+                    <>
+                      {error && (
+                        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 m-4">
+                          <div className="flex items-start gap-2">
+                            <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-red-900 dark:text-red-100 mb-1">
+                                Runtime Error
+                              </h4>
+                              <pre className="text-sm text-red-700 dark:text-red-300 whitespace-pre-wrap font-mono">
+                                {error}
+                              </pre>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      <div className={error ? 'h-[calc(100%-120px)]' : 'h-full'}>
+                        <CodeRunner
+                          code={code}
+                          onError={handleError}
+                          onConsole={handleConsole}
+                        />
+                      </div>
+                    </>
                   ) : (
                     <div className="flex items-center justify-center h-full">
                       <div className="text-center p-6">
@@ -344,17 +379,39 @@ export function PlaygroundPage() {
                         <p className="text-muted-foreground">
                           Click "Run" to see your form in action
                         </p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          Edit the code on the left and run it to see real results
+                        </p>
                       </div>
                     </div>
                   )}
                 </TabsContent>
                 <TabsContent value="console" className="p-6 mt-0">
-                  <div className="bg-black text-green-400 rounded-lg p-4 font-mono text-sm min-h-[500px]">
-                    <div>$ FormKeeper Playground Console</div>
-                    <div className="mt-2 text-gray-500">
-                      {isPreviewActive
-                        ? '✓ Form rendered successfully\n✓ FormKeeper initialized\n\nCheck the preview tab to interact with your form.'
-                        : 'Console output will appear here when you run your code'}
+                  <div className="bg-black text-green-400 rounded-lg p-4 font-mono text-sm min-h-[500px] overflow-auto">
+                    <div className="text-white">$ FormKeeper Playground Console</div>
+                    <div className="mt-2">
+                      {consoleOutput.length > 0 ? (
+                        <div className="space-y-1">
+                          {consoleOutput.map((line, index) => (
+                            <div key={index} className={
+                              line.includes('Error') ? 'text-red-400' :
+                              line.includes('✓') ? 'text-green-400' :
+                              'text-gray-400'
+                            }>
+                              {line}
+                            </div>
+                          ))}
+                          {!error && isPreviewActive && (
+                            <div className="text-green-400 mt-2">
+                              ✓ Code executed successfully
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="text-gray-500">
+                          Console output will appear here when you run your code
+                        </div>
+                      )}
                     </div>
                   </div>
                 </TabsContent>
@@ -369,9 +426,11 @@ export function PlaygroundPage() {
             <h3 className="font-semibold mb-2">💡 Tips</h3>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>• Use the templates above to quickly get started with common patterns</li>
-              <li>• Press Ctrl+Space for autocomplete suggestions</li>
-              <li>• Click "Run" to execute your code (simulation mode in this demo)</li>
+              <li>• Press Ctrl+Space for autocomplete suggestions in Monaco Editor</li>
+              <li>• Click "Run" to execute your code in a sandboxed environment</li>
+              <li>• Edit the code and run it again to see your changes</li>
               <li>• Download your code to use it in your project</li>
+              <li>• Check the Console tab to see execution logs and errors</li>
             </ul>
           </div>
         </Card>
