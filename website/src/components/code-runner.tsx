@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 interface CodeRunnerProps {
   code: string
@@ -7,18 +7,11 @@ interface CodeRunnerProps {
 }
 
 export function CodeRunner({ code, onError, onConsole }: CodeRunnerProps) {
-  const iframeRef = useRef<HTMLIFrameElement>(null)
+  const [html, setHtml] = useState('')
 
   useEffect(() => {
-    if (!iframeRef.current) return
-
-    const iframe = iframeRef.current
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
-
-    if (!iframeDoc) return
-
     // Create a complete HTML document with FormKeeper and React
-    const html = `
+    const htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,9 +59,7 @@ export function CodeRunner({ code, onError, onConsole }: CodeRunnerProps) {
 </html>
 `
 
-    iframeDoc.open()
-    iframeDoc.write(html)
-    iframeDoc.close()
+    setHtml(htmlContent)
   }, [code])
 
   useEffect(() => {
@@ -86,7 +77,7 @@ export function CodeRunner({ code, onError, onConsole }: CodeRunnerProps) {
 
   return (
     <iframe
-      ref={iframeRef}
+      srcDoc={html}
       className="w-full h-full border-0"
       sandbox="allow-scripts"
       title="Code Preview"
