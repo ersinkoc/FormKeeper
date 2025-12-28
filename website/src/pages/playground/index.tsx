@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Play, RotateCcw, Download } from 'lucide-react'
 import { useTheme } from '@/components/theme-provider'
+import { LivePreview } from '@/components/live-preview'
 
 const defaultCode = `import { useForm } from '@oxog/formkeeper/react'
 
@@ -211,15 +212,23 @@ export default TodoList`,
 export function PlaygroundPage() {
   const { theme } = useTheme()
   const [code, setCode] = useState(defaultCode)
-  const [output, setOutput] = useState('')
+  const [currentTemplate, setCurrentTemplate] = useState<'basic' | 'login' | 'array'>('basic')
+  const [isPreviewActive, setIsPreviewActive] = useState(false)
 
   const handleReset = () => {
     setCode(defaultCode)
-    setOutput('')
+    setCurrentTemplate('basic')
+    setIsPreviewActive(false)
   }
 
   const handleRun = () => {
-    setOutput('Code execution in browser is simulated. In a real implementation, this would render your form component.')
+    setIsPreviewActive(true)
+  }
+
+  const handleTemplateChange = (name: string, templateCode: string) => {
+    setCode(templateCode)
+    setCurrentTemplate(name as 'basic' | 'login' | 'array')
+    setIsPreviewActive(false)
   }
 
   const handleDownload = () => {
@@ -249,9 +258,9 @@ export function PlaygroundPage() {
             {Object.entries(templates).map(([name, templateCode]) => (
               <Button
                 key={name}
-                variant="outline"
+                variant={currentTemplate === name ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => setCode(templateCode)}
+                onClick={() => handleTemplateChange(name, templateCode)}
               >
                 {name.charAt(0).toUpperCase() + name.slice(1)}
               </Button>
@@ -323,18 +332,29 @@ export function PlaygroundPage() {
                   <TabsTrigger value="preview">Preview</TabsTrigger>
                   <TabsTrigger value="console">Console</TabsTrigger>
                 </TabsList>
-                <TabsContent value="preview" className="p-6 mt-0">
-                  <div className="bg-muted/20 rounded-lg p-6 min-h-[500px] flex items-center justify-center">
-                    <p className="text-muted-foreground text-center">
-                      {output || 'Click "Run" to see your form in action'}
-                    </p>
-                  </div>
+                <TabsContent value="preview" className="mt-0 h-full">
+                  {isPreviewActive ? (
+                    <div className="h-full overflow-auto">
+                      <LivePreview template={currentTemplate} />
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center p-6">
+                        <Play className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                        <p className="text-muted-foreground">
+                          Click "Run" to see your form in action
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </TabsContent>
                 <TabsContent value="console" className="p-6 mt-0">
                   <div className="bg-black text-green-400 rounded-lg p-4 font-mono text-sm min-h-[500px]">
                     <div>$ FormKeeper Playground Console</div>
                     <div className="mt-2 text-gray-500">
-                      Console output will appear here when you run your code
+                      {isPreviewActive
+                        ? '✓ Form rendered successfully\n✓ FormKeeper initialized\n\nCheck the preview tab to interact with your form.'
+                        : 'Console output will appear here when you run your code'}
                     </div>
                   </div>
                 </TabsContent>

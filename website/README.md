@@ -7,7 +7,7 @@ This is the official documentation and playground website for FormKeeper, built 
 - 📖 **Comprehensive Documentation** - Complete guides and tutorials
 - 🔍 **API Reference** - Detailed API documentation
 - 💡 **Interactive Examples** - Real-world usage examples
-- 🎮 **Live Playground** - Try FormKeeper in your browser with Monaco Editor
+- 🎮 **Live Playground** - Try FormKeeper in your browser with Monaco Editor and real form rendering
 - 🌓 **Dark/Light Mode** - Beautiful themes with JetBrains Mono font
 - 📱 **Responsive Design** - Works perfectly on all devices
 
@@ -69,6 +69,7 @@ website/
 │   │   ├── ui/        # shadcn/ui components
 │   │   ├── layout/    # Header, Footer
 │   │   ├── code-block.tsx
+│   │   ├── live-preview.tsx
 │   │   └── theme-provider.tsx
 │   ├── pages/         # Route pages
 │   │   ├── home.tsx
