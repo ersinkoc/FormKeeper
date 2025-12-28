@@ -126,9 +126,9 @@ Visit [formkeeper.oxog.dev](https://formkeeper.oxog.dev) for full documentation 
 
 ### Local Documentation
 
-- [DOCS.md](./DOCS.md) - Complete documentation
-- [EXAMPLES.md](./EXAMPLES.md) - Code examples
-- [WEBSITE_SETUP.md](./WEBSITE_SETUP.md) - Website development guide
+- [docs/DOCS.md](./docs/DOCS.md) - Complete documentation
+- [docs/EXAMPLES.md](./docs/EXAMPLES.md) - Code examples
+- [docs/WEBSITE_SETUP.md](./docs/WEBSITE_SETUP.md) - Website development guide
 
 ## 📄 License
 
