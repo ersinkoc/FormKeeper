@@ -19,7 +19,7 @@ interface SyntaxHighlighterProps {
 export function SyntaxHighlighter({
   code,
   language,
-  highlightLines = []
+  highlightLines = [],
 }: SyntaxHighlighterProps) {
   useEffect(() => {
     Prism.highlightAll()
@@ -34,8 +34,8 @@ export function SyntaxHighlighter({
           <div
             key={i}
             className={cn(
-              "leading-6",
-              highlightLines.includes(i + 1) && "line-highlight"
+              'leading-6',
+              highlightLines.includes(i + 1) && 'line-highlight'
             )}
           >
             {line || '\n'}

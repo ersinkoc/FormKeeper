@@ -1,113 +1,128 @@
-# FormKeeper Documentation Website
+# FormKeeper Website
 
-This is the official documentation and playground website for FormKeeper, built with React, Vite, and shadcn/ui.
+Official website for FormKeeper - Zero-dependency headless form state manager.
 
-## Features
-
-- 📖 **Comprehensive Documentation** - Complete guides and tutorials
-- 🔍 **API Reference** - Detailed API documentation
-- 💡 **Interactive Examples** - Real-world usage examples
-- 🎮 **Live Playground** - Try FormKeeper in your browser with Monaco Editor and real form rendering
-- 🌓 **Dark/Light Mode** - Beautiful themes with JetBrains Mono font
-- 📱 **Responsive Design** - Works perfectly on all devices
+🌐 **Live Site**: [formkeeper.oxog.dev](https://formkeeper.oxog.dev)
 
 ## Tech Stack
 
-- **Framework**: React 18 + TypeScript
-- **Build Tool**: Vite
-- **UI Components**: shadcn/ui (Radix UI primitives)
-- **Styling**: Tailwind CSS
-- **Code Editor**: Monaco Editor
-- **Syntax Highlighting**: react-syntax-highlighter
-- **Routing**: React Router v6
-- **Fonts**: Inter + JetBrains Mono
+- **React 19** - UI framework
+- **Vite 7** - Build tool and dev server
+- **TypeScript 5** - Type safety
+- **Tailwind CSS 3.4** - Styling
+- **shadcn/ui** - UI components
+- **React Router 6** - Client-side routing
+- **Framer Motion** - Animations
+- **Prism.js** - Syntax highlighting
+- **Playwright** - E2E testing
 
 ## Development
 
-### Prerequisites
-
-- Node.js >= 18.0.0
-- npm, yarn, or pnpm
-
-### Install Dependencies
-
 ```bash
+# Install dependencies
 npm install
-```
 
-### Start Development Server
-
-```bash
+# Start dev server
 npm run dev
-```
 
-The website will be available at `http://localhost:5173`
-
-### Build for Production
-
-```bash
+# Build for production
 npm run build
-```
 
-The built files will be in the `dist` directory.
-
-### Preview Production Build
-
-```bash
+# Preview production build
 npm run preview
+
+# Run tests
+npm run test
+
+# Run tests with UI
+npm run test:ui
+
+# View test report
+npm run test:report
 ```
 
 ## Project Structure
 
 ```
 website/
-├── public/              # Static assets
-│   ├── favicon.svg
-│   └── CNAME           # Custom domain configuration
 ├── src/
-│   ├── components/     # Reusable components
-│   │   ├── ui/        # shadcn/ui components
-│   │   ├── layout/    # Header, Footer
-│   │   ├── code-block.tsx
-│   │   ├── code-runner.tsx
-│   │   └── theme-provider.tsx
-│   ├── pages/         # Route pages
-│   │   ├── home.tsx
-│   │   ├── docs/
-│   │   ├── api/
-│   │   ├── examples/
-│   │   └── playground/
-│   ├── lib/           # Utilities
-│   │   └── utils.ts
-│   ├── styles/        # Global styles
-│   │   └── globals.css
-│   ├── App.tsx        # Root component
-│   └── main.tsx       # Entry point
-├── index.html
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── tailwind.config.js
+│   ├── components/
+│   │   ├── ui/              # shadcn/ui components
+│   │   ├── shared/          # Shared components (Theme)
+│   │   ├── code/            # Code display components
+│   │   └── layout/          # Layout components
+│   ├── pages/               # Route pages
+│   ├── hooks/               # Custom React hooks
+│   ├── lib/                 # Utilities
+│   └── styles/              # CSS files
+├── tests/                   # Playwright tests
+├── public/                  # Static assets
+└── dist/                    # Build output
+```
+
+## Testing
+
+This project uses Playwright for end-to-end testing. Tests cover:
+
+- ✅ Home page rendering
+- ✅ Navigation between pages
+- ✅ Theme toggle functionality
+- ✅ Code block features (copy, line numbers, syntax highlighting)
+- ✅ IDE window components
+- ✅ 404 page handling
+
+Run tests:
+```bash
+npm run test              # Headless mode
+npm run test:ui           # Interactive UI mode
+npm run test:headed       # Headed mode (see browser)
+npm run test:report       # View HTML report
 ```
 
 ## Deployment
 
-The website is automatically deployed to GitHub Pages via GitHub Actions on every push to the `main` branch.
+The website is automatically deployed to GitHub Pages when changes are pushed to the `main` branch.
 
-**Live URL**: https://formkeeper.oxog.dev
+### GitHub Actions Workflows
 
-### Custom Domain Setup
+1. **Test Workflow** (`.github/workflows/test.yml`)
+   - Runs on every push and pull request
+   - Executes Playwright tests
+   - Uploads test reports
 
-1. Add `CNAME` file in `public/` directory with your domain
-2. Configure DNS records:
-   - CNAME: `formkeeper.oxog.dev` → `<username>.github.io`
-3. Enable GitHub Pages in repository settings
-4. Configure custom domain in GitHub Pages settings
+2. **Deploy Workflow** (`.github/workflows/deploy-website.yml`)
+   - Runs on push to `main` branch
+   - Builds the website
+   - Deploys to GitHub Pages
+   - Available at: https://formkeeper.oxog.dev
 
-## Contributing
+## Design System
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+### Colors
+- **Primary**: Zinc scale for dark theme
+- **Accent**: Purple/Pink gradients for CTAs
+- **Code**: Custom Prism.js theme with zinc palette
+
+### Typography
+- **Body**: Inter (Google Fonts)
+- **Code**: JetBrains Mono (Google Fonts)
+
+### Components
+- All code blocks have line numbers
+- Copy button on all code examples
+- IDE-style windows with macOS traffic lights
+- Dark/Light/System theme support
+
+## Features
+
+- 🎨 Modern, responsive design
+- 🌓 Dark/Light theme with system preference support
+- 💻 IDE-style code windows
+- 📱 Mobile-friendly navigation
+- ⚡ Fast build times with Vite
+- 🧪 Comprehensive E2E test coverage
+- 🚀 Automatic GitHub Pages deployment
 
 ## License
 
-MIT © [Ersin KOÇ](https://github.com/ersinkoc)
+MIT © Ersin KOÇ

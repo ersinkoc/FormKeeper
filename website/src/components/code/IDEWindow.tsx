@@ -14,13 +14,15 @@ export function IDEWindow({
   code,
   language,
   showSidebar = true,
-  className
+  className,
 }: IDEWindowProps) {
   return (
-    <div className={cn(
-      "rounded-lg border border-zinc-700 overflow-hidden shadow-2xl",
-      className
-    )}>
+    <div
+      className={cn(
+        'rounded-lg border border-zinc-700 overflow-hidden shadow-2xl',
+        className
+      )}
+    >
       {/* Title Bar */}
       <div className="flex items-center gap-2 px-4 py-3 bg-zinc-800 border-b border-zinc-700">
         {/* Traffic Lights */}
@@ -51,7 +53,6 @@ export function IDEWindow({
             language={language}
             showLineNumbers
             showCopyButton
-            className="border-0 rounded-none"
           />
         </div>
       </div>

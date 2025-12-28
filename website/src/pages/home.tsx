@@ -1,30 +1,29 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Code2, Zap, Package, Shield, Boxes, Rocket, CheckCircle2, XCircle, Sparkles, Terminal, Copy, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { IDEWindow } from '@/components/code/IDEWindow'
-import { useState } from 'react'
+import { Code2, Zap, Package, Shield, Boxes, Rocket, CheckCircle2, XCircle, ArrowRight } from 'lucide-react'
 
 const features = [
   {
-    icon: Code2,
-    title: 'Headless',
-    description: 'Bring your own UI components. No styling opinions, just pure logic.',
+    icon: Package,
+    title: 'Zero Dependencies',
+    description: 'No runtime dependencies. Keep your bundle lean and dependency tree clean.',
   },
   {
     icon: Zap,
     title: 'Tiny Bundle',
-    description: 'Under 5KB minified + gzipped. Every byte counts.',
-  },
-  {
-    icon: Package,
-    title: 'Zero Dependencies',
-    description: 'No runtime dependencies. Keep your bundle lean.',
+    description: 'Under 5KB minified + gzipped. Every byte counts in production.',
   },
   {
     icon: Shield,
     title: 'Type-Safe',
-    description: 'Full TypeScript support with intelligent type inference.',
+    description: 'Full TypeScript support with intelligent type inference and autocomplete.',
+  },
+  {
+    icon: Code2,
+    title: 'Headless',
+    description: 'Bring your own UI components. No styling opinions, just pure logic.',
   },
   {
     icon: Boxes,
@@ -33,7 +32,7 @@ const features = [
   },
   {
     icon: Rocket,
-    title: 'Framework Agnostic',
+    title: 'Multi-Framework',
     description: 'Works with React, Vue, Svelte, or vanilla JavaScript.',
   },
 ]
@@ -57,42 +56,17 @@ function LoginForm() {
           message: 'Invalid email'
         }
       })} />
-      <button type="submit">Login</button>
+      {form.getError('email') && (
+        <span>{form.getError('email')}</span>
+      )}
+      <button type="submit">
+        {form.isSubmitting() ? 'Loading...' : 'Login'}
+      </button>
     </form>
   )
 }`
 
-function InstallCommand() {
-  const [copied, setCopied] = useState(false)
-  const command = 'npm install @oxog/formkeeper'
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(command)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  return (
-    <div className="inline-flex items-center gap-2 bg-black dark:bg-zinc-900 text-green-400 px-6 py-3 rounded-lg font-mono text-sm border border-zinc-700">
-      <Terminal className="h-4 w-4" />
-      <span className="text-zinc-400">$</span>
-      <span>{command}</span>
-      <button
-        onClick={handleCopy}
-        className="ml-2 p-1 hover:bg-zinc-800 rounded transition-colors"
-        aria-label="Copy command"
-      >
-        {copied ? (
-          <Check className="h-4 w-4 text-green-400" />
-        ) : (
-          <Copy className="h-4 w-4 text-zinc-400" />
-        )}
-      </button>
-    </div>
-  )
-}
-
-export function HomePage() {
+export function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -102,8 +76,8 @@ export function HomePage() {
         <div className="container relative">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border bg-muted/50 text-sm mb-8 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span>Welcome to the new era of form libraries</span>
+              <Package className="h-4 w-4 text-primary" />
+              <span>Zero-dependency headless form state manager</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
@@ -118,23 +92,19 @@ export function HomePage() {
               With FormKeeper, forms take <span className="text-foreground font-semibold">less than 5KB</span>.
             </p>
 
-            <div className="flex flex-col items-center gap-6 mb-12">
-              <InstallCommand />
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" asChild className="text-lg px-8">
-                  <Link to="/playground">
-                    <Zap className="mr-2 h-5 w-5" />
-                    Try Now
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" asChild className="text-lg px-8">
-                  <Link to="/docs">
-                    Documentation
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Button size="lg" asChild className="text-lg px-8">
+                <Link to="/docs">
+                  Get Started
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="text-lg px-8">
+                <Link to="/playground">
+                  <Zap className="mr-2 h-5 w-5" />
+                  Try Playground
+                </Link>
+              </Button>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto text-sm">
@@ -151,97 +121,9 @@ export function HomePage() {
                 <div className="text-muted-foreground">TypeScript</div>
               </div>
               <div className="flex flex-col items-center gap-2">
-                <div className="text-3xl font-bold text-orange-500">∞</div>
+                <div className="text-3xl font-bold text-orange-500">3</div>
                 <div className="text-muted-foreground">Frameworks</div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Problem/Solution Section */}
-      <section className="py-20 border-t bg-muted/20">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                Stop{' '}
-                <span className="text-destructive">fighting</span>{' '}
-                with other libraries
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Other libraries force you into their rules. FormKeeper gives you complete control.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
-              {/* Other Libraries */}
-              <Card className="relative border-destructive/50">
-                <div className="absolute -top-3 left-4">
-                  <span className="bg-destructive text-destructive-foreground px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
-                    <XCircle className="h-4 w-4" />
-                    Other Libraries
-                  </span>
-                </div>
-                <CardHeader className="pt-8">
-                  <ul className="space-y-3 text-muted-foreground">
-                    <li className="flex items-start gap-2">
-                      <XCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
-                      <span>50KB+ bundle size</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <XCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
-                      <span>Complex APIs and concepts</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <XCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
-                      <span>React-only support</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <XCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
-                      <span>Tons of boilerplate code</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <XCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
-                      <span>Locked into UI framework</span>
-                    </li>
-                  </ul>
-                </CardHeader>
-              </Card>
-
-              {/* FormKeeper */}
-              <Card className="relative border-primary/50 bg-primary/5">
-                <div className="absolute -top-3 left-4">
-                  <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
-                    <CheckCircle2 className="h-4 w-4" />
-                    FormKeeper
-                  </span>
-                </div>
-                <CardHeader className="pt-8">
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="font-medium">&lt;5KB minified + gzipped</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="font-medium">Simple and intuitive API</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="font-medium">Framework agnostic</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="font-medium">Minimal and clean code</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="font-medium">Headless - use your own UI</span>
-                    </li>
-                  </ul>
-                </CardHeader>
-              </Card>
             </div>
           </div>
         </div>
@@ -282,11 +164,10 @@ export function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
+            {features.map((feature) => (
               <Card
                 key={feature.title}
                 className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-                style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardHeader className="relative">
@@ -300,15 +181,6 @@ export function HomePage() {
                 </CardHeader>
               </Card>
             ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 border border-primary/20 rounded-lg">
-              <Rocket className="h-5 w-5 text-primary" />
-              <span className="font-semibold">
-                Extend features however you want with the plugin system
-              </span>
-            </div>
           </div>
         </div>
       </section>
@@ -368,13 +240,13 @@ export function HomePage() {
                       <td className="text-center py-4 px-6">
                         <div className="inline-flex items-center gap-2">
                           <CheckCircle2 className="h-5 w-5 text-green-500" />
-                          <span className="font-bold text-green-600 dark:text-green-400">All</span>
+                          <span className="font-bold text-green-600 dark:text-green-400">React + Vue + Svelte</span>
                         </div>
                       </td>
                       <td className="text-center py-4 px-6 text-muted-foreground">React Only</td>
                       <td className="text-center py-4 px-6 text-muted-foreground">React Only</td>
                     </tr>
-                    <tr className="border-b hover:bg-muted/30 transition-colors">
+                    <tr className="hover:bg-muted/30 transition-colors">
                       <td className="py-4 px-6 font-medium">Plugin System</td>
                       <td className="text-center py-4 px-6">
                         <CheckCircle2 className="h-6 w-6 text-green-500 mx-auto" />
@@ -384,18 +256,6 @@ export function HomePage() {
                       </td>
                       <td className="text-center py-4 px-6">
                         <XCircle className="h-6 w-6 text-muted-foreground/50 mx-auto" />
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-muted/30 transition-colors">
-                      <td className="py-4 px-6 font-medium">TypeScript</td>
-                      <td className="text-center py-4 px-6">
-                        <CheckCircle2 className="h-6 w-6 text-green-500 mx-auto" />
-                      </td>
-                      <td className="text-center py-4 px-6">
-                        <CheckCircle2 className="h-6 w-6 text-muted-foreground/50 mx-auto" />
-                      </td>
-                      <td className="text-center py-4 px-6">
-                        <CheckCircle2 className="h-6 w-6 text-muted-foreground/50 mx-auto" />
                       </td>
                     </tr>
                   </tbody>
@@ -412,7 +272,7 @@ export function HomePage() {
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
         <div className="container relative">
           <div className="max-w-3xl mx-auto text-center">
-            <Sparkles className="h-12 w-12 text-primary mx-auto mb-6" />
+            <Package className="h-12 w-12 text-primary mx-auto mb-6" />
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Ready to get started?
             </h2>
@@ -433,9 +293,8 @@ export function HomePage() {
                 </Link>
               </Button>
             </div>
-            <div className="inline-flex flex-col gap-3">
-              <p className="text-sm text-muted-foreground">or install right now:</p>
-              <InstallCommand />
+            <div className="inline-block bg-zinc-900 dark:bg-zinc-950 border border-zinc-800 rounded-lg px-6 py-4 font-mono text-sm text-zinc-300">
+              <span className="text-zinc-500">$</span> npm install @oxog/formkeeper
             </div>
           </div>
         </div>

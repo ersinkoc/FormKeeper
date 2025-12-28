@@ -30,10 +30,12 @@ export function CodeBlock({
   const lineCount = lines.length
 
   return (
-    <div className={cn(
-      "code-block-wrapper rounded-lg border border-zinc-800 bg-zinc-950 overflow-hidden",
-      className
-    )}>
+    <div
+      className={cn(
+        'code-block-wrapper rounded-lg border border-zinc-800 bg-zinc-950 overflow-hidden',
+        className
+      )}
+    >
       {/* Header */}
       {(filename || showCopyButton) && (
         <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800 bg-zinc-900/50">
@@ -71,10 +73,7 @@ export function CodeBlock({
         style={{ maxHeight: maxHeight || 'none' }}
       >
         {showLineNumbers && (
-          <LineNumbers
-            count={lineCount}
-            highlightLines={highlightLines}
-          />
+          <LineNumbers count={lineCount} highlightLines={highlightLines} />
         )}
         <div className="flex-1 p-4 overflow-x-auto">
           <SyntaxHighlighter

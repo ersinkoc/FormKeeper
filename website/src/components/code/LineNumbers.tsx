@@ -12,8 +12,8 @@ export function LineNumbers({ count, highlightLines = [] }: LineNumbersProps) {
         <span
           key={i + 1}
           className={cn(
-            "text-xs leading-6 tabular-nums",
-            highlightLines.includes(i + 1) && "text-blue-400"
+            'text-xs leading-6 tabular-nums',
+            highlightLines.includes(i + 1) && 'text-blue-400'
           )}
         >
           {i + 1}
