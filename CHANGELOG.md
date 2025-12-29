@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2024-12-29
+
+### Fixed
+- Fixed validation errors not displaying on form submit - all fields are now marked as touched when validation fails
+- Fixed `isSubmitting` state staying true after validation failure - state is now reset before emitting submit-error event
+- Added `submit-error` event subscription in `useField` and `useForm` hooks for proper React state synchronization
+
+### Changed
+- Updated deploy-website workflow to build library before website
+- Workflow now triggers on src/ changes as well as website/ changes
+
+---
+
 ## [1.0.1] - 2024-12-29
 
 ### Fixed
@@ -128,6 +141,7 @@ For more information, visit: https://formkeeper.oxog.dev
 
 ## Version History
 
+- **1.0.2** (2024-12-29) - Fix validation display and isSubmitting state issues
 - **1.0.1** (2024-12-29) - Bug fixes for website syntax highlighting and page centering
 - **1.0.0** (2024-12-28) - Initial stable release
 
