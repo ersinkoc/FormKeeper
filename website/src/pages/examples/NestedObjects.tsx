@@ -3,6 +3,7 @@ import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CodeBlock } from '@/components/code/CodeBlock'
 import { BrowserWindow } from '@/components/code/BrowserWindow'
+import { LiveNestedObjects } from '@/components/examples'
 
 const nestedObjectsCode = `import { useForm, useField, FormProvider } from '@oxog/formkeeper/react'
 
@@ -165,38 +166,13 @@ export function NestedObjectsExample() {
       </div>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Preview</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-semibold">Live Preview</h2>
+          <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Interactive</span>
+        </div>
         <BrowserWindow url="localhost:3000/profile">
-          <div className="p-8 bg-white dark:bg-zinc-900">
-            <div className="max-w-lg mx-auto p-6 border rounded-lg">
-              <h2 className="text-2xl font-bold mb-6">Edit Profile</h2>
-              <div className="space-y-6">
-                <section>
-                  <h3 className="text-lg font-semibold mb-4">Personal Information</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm mb-1">First Name</label>
-                      <input className="w-full px-3 py-2 border rounded-md bg-background" />
-                    </div>
-                    <div>
-                      <label className="block text-sm mb-1">Last Name</label>
-                      <input className="w-full px-3 py-2 border rounded-md bg-background" />
-                    </div>
-                  </div>
-                </section>
-                <section>
-                  <h3 className="text-lg font-semibold mb-4">Address</h3>
-                  <div className="space-y-3">
-                    <input placeholder="Street" className="w-full px-3 py-2 border rounded-md bg-background" />
-                    <div className="grid grid-cols-2 gap-4">
-                      <input placeholder="City" className="px-3 py-2 border rounded-md bg-background" />
-                      <input placeholder="ZIP" className="px-3 py-2 border rounded-md bg-background" />
-                    </div>
-                  </div>
-                </section>
-                <button className="w-full py-2 bg-blue-600 text-white rounded-md">Save Profile</button>
-              </div>
-            </div>
+          <div className="bg-zinc-900">
+            <LiveNestedObjects />
           </div>
         </BrowserWindow>
       </section>

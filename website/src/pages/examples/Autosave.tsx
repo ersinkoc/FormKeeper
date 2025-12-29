@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
-import { ArrowLeft, ExternalLink, Clock } from 'lucide-react'
+import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CodeBlock } from '@/components/code/CodeBlock'
 import { BrowserWindow } from '@/components/code/BrowserWindow'
+import { LiveAutosave } from '@/components/examples'
 
 const autosaveCode = `import { useForm, useField, FormProvider } from '@oxog/formkeeper/react'
 import { createAutosavePlugin } from '@oxog/formkeeper/plugins/autosave'
@@ -152,27 +153,13 @@ export function AutosaveExample() {
       </div>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Preview</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-semibold">Live Preview</h2>
+          <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Interactive</span>
+        </div>
         <BrowserWindow url="localhost:3000/write">
-          <div className="p-8 bg-white dark:bg-zinc-900">
-            <div className="max-w-2xl mx-auto p-6 border rounded-lg">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Write Post</h2>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4" />
-                  Saved 2:34 PM
-                </div>
-              </div>
-              <div className="space-y-4">
-                <input placeholder="Post title..." className="w-full px-4 py-3 text-2xl border-b bg-transparent focus:outline-none" />
-                <textarea placeholder="Write your post..." rows={6} className="w-full px-4 py-3 border rounded-md bg-background resize-none" />
-                <input placeholder="Tags (comma separated)" className="w-full px-4 py-2 border rounded-md bg-background" />
-              </div>
-              <div className="flex gap-4 mt-6">
-                <button className="px-4 py-2 border rounded-md">Discard Draft</button>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-md">Publish</button>
-              </div>
-            </div>
+          <div className="bg-zinc-900">
+            <LiveAutosave />
           </div>
         </BrowserWindow>
       </section>

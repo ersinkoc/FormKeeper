@@ -3,6 +3,7 @@ import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CodeBlock } from '@/components/code/CodeBlock'
 import { BrowserWindow } from '@/components/code/BrowserWindow'
+import { LiveSchemaValidation } from '@/components/examples'
 
 const schemaValidationCode = `import { z } from 'zod'
 import { useForm, useField, FormProvider } from '@oxog/formkeeper/react'
@@ -119,31 +120,13 @@ export function SchemaValidationExample() {
       </div>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Preview</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-semibold">Live Preview</h2>
+          <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Interactive</span>
+        </div>
         <BrowserWindow url="localhost:3000/profile">
-          <div className="p-8 bg-white dark:bg-zinc-900">
-            <div className="max-w-md mx-auto p-6 border rounded-lg">
-              <h2 className="text-2xl font-bold mb-6">User Profile</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Name</label>
-                  <input className="w-full px-3 py-2 border rounded-md bg-background" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
-                  <input type="email" className="w-full px-3 py-2 border rounded-md bg-background" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Age</label>
-                  <input type="number" className="w-full px-3 py-2 border rounded-md bg-background" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Website (optional)</label>
-                  <input placeholder="https://" className="w-full px-3 py-2 border rounded-md bg-background" />
-                </div>
-                <button className="w-full py-2 bg-blue-600 text-white rounded-md">Save Profile</button>
-              </div>
-            </div>
+          <div className="bg-zinc-900">
+            <LiveSchemaValidation />
           </div>
         </BrowserWindow>
       </section>

@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
-import { ArrowLeft, ExternalLink, Loader2 } from 'lucide-react'
+import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CodeBlock } from '@/components/code/CodeBlock'
 import { BrowserWindow } from '@/components/code/BrowserWindow'
+import { LiveAsyncValidation } from '@/components/examples'
 
 const asyncValidationCode = `import { useForm, useField, FormProvider } from '@oxog/formkeeper/react'
 
@@ -111,33 +112,13 @@ export function AsyncValidationExample() {
       </div>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Preview</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-semibold">Live Preview</h2>
+          <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Interactive</span>
+        </div>
         <BrowserWindow url="localhost:3000/signup">
-          <div className="p-8 bg-white dark:bg-zinc-900">
-            <div className="max-w-md mx-auto p-6 border rounded-lg">
-              <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Username</label>
-                  <div className="relative">
-                    <input placeholder="Choose a username" className="w-full px-3 py-2 pr-10 border rounded-md bg-background" />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">Checking availability...</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
-                  <input type="email" className="w-full px-3 py-2 border rounded-md bg-background" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Password</label>
-                  <input type="password" className="w-full px-3 py-2 border rounded-md bg-background" />
-                </div>
-                <button className="w-full py-2 bg-blue-600 text-white rounded-md">Create Account</button>
-              </div>
-            </div>
+          <div className="bg-zinc-900">
+            <LiveAsyncValidation />
           </div>
         </BrowserWindow>
       </section>

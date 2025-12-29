@@ -8,7 +8,13 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@oxog/formkeeper': path.resolve(__dirname, '../dist'),
+      '@oxog/formkeeper/react': path.resolve(__dirname, '../dist/react'),
+      '@oxog/formkeeper/plugins': path.resolve(__dirname, '../dist/plugins'),
     },
+  },
+  optimizeDeps: {
+    exclude: ['@oxog/formkeeper', '@oxog/formkeeper/react', '@oxog/formkeeper/plugins'],
   },
   build: {
     outDir: 'dist',

@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
-import { ArrowLeft, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CodeBlock } from '@/components/code/CodeBlock'
 import { BrowserWindow } from '@/components/code/BrowserWindow'
+import { LiveMultiStepWizard } from '@/components/examples'
 
 const wizardCode = `import { useForm, useField, FormProvider } from '@oxog/formkeeper/react'
 import { createWizardPlugin } from '@oxog/formkeeper/plugins/wizard'
@@ -136,39 +137,13 @@ export function MultiStepWizardExample() {
       </div>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Preview</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-semibold">Live Preview</h2>
+          <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Interactive</span>
+        </div>
         <BrowserWindow url="localhost:3000/wizard">
-          <div className="p-8 bg-white dark:bg-zinc-900">
-            <div className="max-w-md mx-auto p-6 border rounded-lg">
-              <div className="mb-6">
-                <div className="flex justify-between text-sm mb-2">
-                  <span>Step 1 of 3</span>
-                  <span>33%</span>
-                </div>
-                <div className="h-2 bg-gray-200 rounded">
-                  <div className="h-2 bg-blue-600 rounded w-1/3" />
-                </div>
-              </div>
-              <h3 className="text-xl font-semibold mb-4">Personal Information</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm mb-1">First Name</label>
-                  <input className="w-full px-3 py-2 border rounded bg-background" />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">Last Name</label>
-                  <input className="w-full px-3 py-2 border rounded bg-background" />
-                </div>
-              </div>
-              <div className="flex justify-between mt-6">
-                <button className="px-4 py-2 border rounded opacity-50" disabled>
-                  <ChevronLeft className="w-4 h-4 inline mr-1" />Previous
-                </button>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded">
-                  Next<ChevronRight className="w-4 h-4 inline ml-1" />
-                </button>
-              </div>
-            </div>
+          <div className="bg-zinc-900">
+            <LiveMultiStepWizard />
           </div>
         </BrowserWindow>
       </section>

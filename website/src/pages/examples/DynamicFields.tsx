@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
-import { ArrowLeft, ExternalLink, Plus, Trash2 } from 'lucide-react'
+import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CodeBlock } from '@/components/code/CodeBlock'
 import { BrowserWindow } from '@/components/code/BrowserWindow'
+import { LiveDynamicFields } from '@/components/examples'
 
 const dynamicFieldsCode = `import { useForm, useField, useFieldArray, FormProvider } from '@oxog/formkeeper/react'
 
@@ -126,30 +127,13 @@ export function DynamicFieldsExample() {
       </div>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Preview</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-semibold">Live Preview</h2>
+          <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Interactive</span>
+        </div>
         <BrowserWindow url="localhost:3000/team">
-          <div className="p-8 bg-white dark:bg-zinc-900">
-            <div className="max-w-lg mx-auto p-6 border rounded-lg">
-              <h2 className="text-2xl font-bold mb-6">Create Team</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Team Name</label>
-                  <input className="w-full px-3 py-2 border rounded-md bg-background" />
-                </div>
-                <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium">Team Members</h3>
-                  <button className="flex items-center gap-1 text-blue-600 text-sm">
-                    <Plus className="w-4 h-4" /> Add Member
-                  </button>
-                </div>
-                <div className="flex gap-2">
-                  <input placeholder="Name" className="flex-1 px-3 py-2 border rounded-md bg-background" />
-                  <input placeholder="Email" className="flex-1 px-3 py-2 border rounded-md bg-background" />
-                  <button className="p-2 text-red-500"><Trash2 className="w-4 h-4" /></button>
-                </div>
-                <button className="w-full py-2 bg-blue-600 text-white rounded-md">Create Team</button>
-              </div>
-            </div>
+          <div className="bg-zinc-900">
+            <LiveDynamicFields />
           </div>
         </BrowserWindow>
       </section>

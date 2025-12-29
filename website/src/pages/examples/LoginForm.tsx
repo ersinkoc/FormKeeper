@@ -3,6 +3,7 @@ import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CodeBlock } from '@/components/code/CodeBlock'
 import { BrowserWindow } from '@/components/code/BrowserWindow'
+import { LiveLoginForm } from '@/components/examples'
 
 const loginFormCode = `import { useForm, useField, FormProvider } from '@oxog/formkeeper/react'
 
@@ -125,35 +126,17 @@ export function LoginFormExample() {
         </p>
       </div>
 
-      {/* Preview */}
+      {/* Live Preview */}
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Preview</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-semibold">Live Preview</h2>
+          <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
+            Interactive
+          </span>
+        </div>
         <BrowserWindow url="localhost:3000/login">
-          <div className="p-8 bg-white dark:bg-zinc-900">
-            <div className="max-w-md mx-auto p-6 border rounded-lg">
-              <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
-                  <input
-                    type="email"
-                    placeholder="you@example.com"
-                    className="w-full px-3 py-2 border rounded-md bg-background"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Password</label>
-                  <input
-                    type="password"
-                    placeholder="********"
-                    className="w-full px-3 py-2 border rounded-md bg-background"
-                  />
-                </div>
-                <button className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                  Login
-                </button>
-              </div>
-            </div>
+          <div className="bg-zinc-900">
+            <LiveLoginForm />
           </div>
         </BrowserWindow>
       </section>

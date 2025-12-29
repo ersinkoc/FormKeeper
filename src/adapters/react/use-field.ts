@@ -3,7 +3,7 @@
  * Subscribe to a specific field's state
  */
 
-import { useEffect, useSyncExternalStore, useCallback } from 'react'
+import { useEffect, useSyncExternalStore, useCallback, useRef } from 'react'
 import { useFormContext } from './context'
 import type {
   FieldRegistration,
@@ -86,16 +86,40 @@ export function useField(
     [form, name]
   )
 
-  const getSnapshot = useCallback(
-    () => ({
-      value: form.getValues(name as any),
-      error: form.getError(name as any),
-      touched: form.isTouched(name as any),
-      dirty: form.isDirty(name as any),
-      validating: form.isFieldValidating(name),
-    }),
-    [form, name]
-  )
+  const snapshotRef = useRef<{
+    value: any
+    error: string | undefined
+    touched: boolean
+    dirty: boolean
+    validating: boolean
+  } | null>(null)
+
+  const getSnapshot = useCallback(() => {
+    const newValue = form.getValues(name as any)
+    const newError = form.getError(name as any)
+    const newTouched = form.isTouched(name as any)
+    const newDirty = form.isDirty(name as any)
+    const newValidating = form.isFieldValidating(name)
+
+    const current = snapshotRef.current
+    if (
+      !current ||
+      current.value !== newValue ||
+      current.error !== newError ||
+      current.touched !== newTouched ||
+      current.dirty !== newDirty ||
+      current.validating !== newValidating
+    ) {
+      snapshotRef.current = {
+        value: newValue,
+        error: newError,
+        touched: newTouched,
+        dirty: newDirty,
+        validating: newValidating,
+      }
+    }
+    return snapshotRef.current!
+  }, [form, name])
 
   const fieldState = useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
 
