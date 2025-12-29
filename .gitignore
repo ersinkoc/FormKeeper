@@ -52,3 +52,4 @@ website/.vite/
 
 # Project planning docs (internal use only)
 .project/
+.playwright-mcp/

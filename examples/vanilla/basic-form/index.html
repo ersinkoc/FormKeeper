@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormKeeper - Basic Form Example</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; padding: 2rem; background: #09090b; color: #fafafa; }
+    .container { max-width: 400px; margin: 0 auto; }
+    h1 { margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; }
+    input { width: 100%; padding: 0.75rem; border: 1px solid #27272a; border-radius: 0.5rem; background: #18181b; color: #fafafa; }
+    input:focus { outline: none; border-color: #3b82f6; }
+    input.error { border-color: #ef4444; }
+    .error-message { color: #ef4444; font-size: 0.75rem; margin-top: 0.25rem; }
+    button { width: 100%; padding: 0.75rem; background: #3b82f6; color: white; border: none; border-radius: 0.5rem; cursor: pointer; font-size: 1rem; }
+    button:hover { background: #2563eb; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .state { margin-top: 1.5rem; padding: 1rem; background: #18181b; border-radius: 0.5rem; font-family: monospace; font-size: 0.75rem; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Basic Form</h1>
+
+    <form id="contact-form">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name">
+        <div id="name-error" class="error-message"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email">
+        <div id="email-error" class="error-message"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <input type="text" id="message" name="message" placeholder="Enter your message">
+        <div id="message-error" class="error-message"></div>
+      </div>
+
+      <button type="submit" id="submit-btn">Submit</button>
+    </form>
+
+    <div class="state" id="form-state"></div>
+  </div>
+
+  <script type="module">
+    import { createForm } from '@oxog/formkeeper'
+
+    // Create form instance
+    const form = createForm({
+      initialValues: {
+        name: '',
+        email: '',
+        message: ''
+      },
+      onSubmit: async (values) => {
+        console.log('Form submitted:', values)
+        alert('Form submitted successfully!')
+      }
+    })
+
+    // Register fields with validation rules
+    const nameReg = form.register('name', {
+      required: 'Name is required',
+      minLength: { value: 2, message: 'Name must be at least 2 characters' }
+    })
+
+    const emailReg = form.register('email', {
+      required: 'Email is required',
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: 'Please enter a valid email'
+      }
+    })
+
+    const messageReg = form.register('message', {
+      required: 'Message is required',
+      minLength: { value: 10, message: 'Message must be at least 10 characters' }
+    })
+
+    // Get DOM elements
+    const nameInput = document.getElementById('name')
+    const emailInput = document.getElementById('email')
+    const messageInput = document.getElementById('message')
+    const submitBtn = document.getElementById('submit-btn')
+    const formStateEl = document.getElementById('form-state')
+
+    // Bind field events
+    function bindField(input, registration, errorId) {
+      const errorEl = document.getElementById(errorId)
+
+      input.addEventListener('input', (e) => {
+        registration.onChange(e)
+        updateUI()
+      })
+
+      input.addEventListener('blur', (e) => {
+        registration.onBlur(e)
+        updateUI()
+      })
+
+      nameReg.ref(input)
+    }
+
+    bindField(nameInput, nameReg, 'name-error')
+    bindField(emailInput, emailReg, 'email-error')
+    bindField(messageInput, messageReg, 'message-error')
+
+    // Handle form submit
+    document.getElementById('contact-form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      await form.handleSubmit(e)
+      updateUI()
+    })
+
+    // Update UI based on form state
+    function updateUI() {
+      const errors = form.getErrors()
+      const touched = form.getTouched()
+
+      // Update error states
+      const fields = ['name', 'email', 'message']
+      fields.forEach(field => {
+        const input = document.getElementById(field)
+        const errorEl = document.getElementById(`${field}-error`)
+        const error = form.getError(field)
+        const isTouched = form.isTouched(field)
+
+        if (isTouched && error) {
+          input.classList.add('error')
+          errorEl.textContent = error
+        } else {
+          input.classList.remove('error')
+          errorEl.textContent = ''
+        }
+      })
+
+      // Update submit button
+      submitBtn.disabled = form.isSubmitting()
+      submitBtn.textContent = form.isSubmitting() ? 'Submitting...' : 'Submit'
+
+      // Update state display
+      formStateEl.textContent = JSON.stringify({
+        values: form.getValues(),
+        errors: form.getErrors(),
+        touched: form.getTouched(),
+        isValid: form.isValid(),
+        isDirty: form.isDirty(),
+        isSubmitting: form.isSubmitting()
+      }, null, 2)
+    }
+
+    // Initial UI update
+    updateUI()
+  </script>
+</body>
+</html>

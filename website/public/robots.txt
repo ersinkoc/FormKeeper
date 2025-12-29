@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://formkeeper.oxog.dev/sitemap.xml

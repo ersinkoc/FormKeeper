@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormKeeper - Array Fields Example</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; padding: 2rem; background: #09090b; color: #fafafa; }
+    .container { max-width: 600px; margin: 0 auto; }
+    h1 { margin-bottom: 0.5rem; }
+    p { color: #a1a1aa; margin-bottom: 1.5rem; }
+    .form-section { margin-bottom: 2rem; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    h2 { font-size: 1.25rem; }
+    .item-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; padding: 1rem; background: #18181b; border-radius: 0.5rem; }
+    .item-row input { flex: 1; padding: 0.5rem; border: 1px solid #27272a; border-radius: 0.25rem; background: #09090b; color: #fafafa; }
+    .item-row input:focus { outline: none; border-color: #3b82f6; }
+    .item-row input.error { border-color: #ef4444; }
+    .item-number { width: 30px; display: flex; align-items: center; justify-content: center; color: #a1a1aa; font-weight: bold; }
+    .item-actions { display: flex; gap: 0.25rem; }
+    .btn { padding: 0.5rem 0.75rem; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 0.875rem; }
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-secondary { background: #27272a; color: white; }
+    .btn-secondary:hover { background: #3f3f46; }
+    .btn-danger { background: #dc2626; color: white; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-icon { padding: 0.5rem; }
+    .empty-state { text-align: center; padding: 2rem; background: #18181b; border-radius: 0.5rem; color: #a1a1aa; }
+    .submit-section { margin-top: 2rem; }
+    .submit-btn { width: 100%; padding: 1rem; background: #3b82f6; color: white; border: none; border-radius: 0.5rem; cursor: pointer; font-size: 1rem; }
+    .submit-btn:hover { background: #2563eb; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .totals { margin-top: 1rem; padding: 1rem; background: #18181b; border-radius: 0.5rem; }
+    .total-row { display: flex; justify-content: space-between; padding: 0.5rem 0; }
+    .total-row.final { border-top: 1px solid #27272a; font-weight: bold; font-size: 1.25rem; }
+    .price-input { width: 100px !important; flex: none !important; }
+    .qty-input { width: 70px !important; flex: none !important; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Order Form</h1>
+    <p>This example demonstrates array fields with dynamic items.</p>
+
+    <form id="order-form">
+      <div class="form-section">
+        <div class="section-header">
+          <h2>Order Items</h2>
+          <button type="button" class="btn btn-primary" id="add-item">+ Add Item</button>
+        </div>
+
+        <div id="items-list"></div>
+        <div id="items-empty" class="empty-state">
+          No items yet. Click "Add Item" to start your order.
+        </div>
+      </div>
+
+      <div class="totals">
+        <div class="total-row">
+          <span>Subtotal</span>
+          <span id="subtotal">$0.00</span>
+        </div>
+        <div class="total-row">
+          <span>Tax (10%)</span>
+          <span id="tax">$0.00</span>
+        </div>
+        <div class="total-row final">
+          <span>Total</span>
+          <span id="total">$0.00</span>
+        </div>
+      </div>
+
+      <div class="submit-section">
+        <button type="submit" class="submit-btn" id="submit-btn">Place Order</button>
+      </div>
+    </form>
+  </div>
+
+  <script type="module">
+    import { createForm } from '@oxog/formkeeper'
+
+    // Create form instance
+    const form = createForm({
+      initialValues: {
+        items: []
+      },
+      onSubmit: async (values) => {
+        console.log('Order submitted:', values)
+        alert('Order placed! Total: $' + calculateTotal().toFixed(2))
+      }
+    })
+
+    // Get field array helpers
+    const { fields, append, remove, move } = form.useFieldArray('items')
+
+    // Calculate totals
+    function calculateTotal() {
+      const items = form.getValues('items') || []
+      return items.reduce((sum, item) => {
+        const price = parseFloat(item.price) || 0
+        const quantity = parseInt(item.quantity) || 0
+        return sum + (price * quantity)
+      }, 0)
+    }
+
+    function updateTotals() {
+      const subtotal = calculateTotal()
+      const tax = subtotal * 0.1
+      const total = subtotal + tax
+
+      document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2)
+      document.getElementById('tax').textContent = '$' + tax.toFixed(2)
+      document.getElementById('total').textContent = '$' + total.toFixed(2)
+    }
+
+    // Create an item row element using safe DOM methods
+    function createItemRow(item, index, itemsLength) {
+      const row = document.createElement('div')
+      row.className = 'item-row'
+      row.dataset.index = index
+
+      // Item number
+      const numberDiv = document.createElement('div')
+      numberDiv.className = 'item-number'
+      numberDiv.textContent = String(index + 1)
+      row.appendChild(numberDiv)
+
+      // Name input
+      const nameInput = document.createElement('input')
+      nameInput.type = 'text'
+      nameInput.name = 'items.' + index + '.name'
+      nameInput.value = item.name || ''
+      nameInput.placeholder = 'Item name'
+      nameInput.addEventListener('input', handleInputChange)
+      row.appendChild(nameInput)
+
+      // Price input
+      const priceInput = document.createElement('input')
+      priceInput.type = 'number'
+      priceInput.name = 'items.' + index + '.price'
+      priceInput.value = item.price || ''
+      priceInput.placeholder = 'Price'
+      priceInput.step = '0.01'
+      priceInput.min = '0'
+      priceInput.className = 'price-input'
+      priceInput.addEventListener('input', handleInputChange)
+      row.appendChild(priceInput)
+
+      // Quantity input
+      const qtyInput = document.createElement('input')
+      qtyInput.type = 'number'
+      qtyInput.name = 'items.' + index + '.quantity'
+      qtyInput.value = item.quantity || 1
+      qtyInput.placeholder = 'Qty'
+      qtyInput.min = '1'
+      qtyInput.className = 'qty-input'
+      qtyInput.addEventListener('input', handleInputChange)
+      row.appendChild(qtyInput)
+
+      // Actions container
+      const actionsDiv = document.createElement('div')
+      actionsDiv.className = 'item-actions'
+
+      // Move up button
+      const moveUpBtn = document.createElement('button')
+      moveUpBtn.type = 'button'
+      moveUpBtn.className = 'btn btn-secondary btn-icon move-up'
+      moveUpBtn.textContent = '\u2191'
+      moveUpBtn.disabled = index === 0
+      moveUpBtn.addEventListener('click', () => {
+        if (index > 0) {
+          move(index, index - 1)
+          renderItems()
+        }
+      })
+      actionsDiv.appendChild(moveUpBtn)
+
+      // Move down button
+      const moveDownBtn = document.createElement('button')
+      moveDownBtn.type = 'button'
+      moveDownBtn.className = 'btn btn-secondary btn-icon move-down'
+      moveDownBtn.textContent = '\u2193'
+      moveDownBtn.disabled = index === itemsLength - 1
+      moveDownBtn.addEventListener('click', () => {
+        if (index < itemsLength - 1) {
+          move(index, index + 1)
+          renderItems()
+        }
+      })
+      actionsDiv.appendChild(moveDownBtn)
+
+      // Remove button
+      const removeBtn = document.createElement('button')
+      removeBtn.type = 'button'
+      removeBtn.className = 'btn btn-danger btn-icon remove-item'
+      removeBtn.textContent = '\u2715'
+      removeBtn.addEventListener('click', () => {
+        remove(index)
+        renderItems()
+      })
+      actionsDiv.appendChild(removeBtn)
+
+      row.appendChild(actionsDiv)
+
+      return row
+    }
+
+    // Handle input changes
+    function handleInputChange(e) {
+      const row = e.target.closest('.item-row')
+      const index = parseInt(row.dataset.index)
+      const nameParts = e.target.name.split('.')
+      const field = nameParts[nameParts.length - 1]
+      const value = field === 'quantity' ? (parseInt(e.target.value) || 1) : e.target.value
+
+      const items = form.getValues('items')
+      items[index][field] = value
+      form.setValues({ items })
+      updateTotals()
+    }
+
+    // Render items list
+    function renderItems() {
+      const itemsList = document.getElementById('items-list')
+      const emptyState = document.getElementById('items-empty')
+      const items = form.getValues('items') || []
+
+      // Clear existing items
+      while (itemsList.firstChild) {
+        itemsList.removeChild(itemsList.firstChild)
+      }
+
+      if (items.length === 0) {
+        emptyState.style.display = 'block'
+        updateTotals()
+        return
+      }
+
+      emptyState.style.display = 'none'
+
+      // Create and append item rows
+      items.forEach((item, index) => {
+        const row = createItemRow(item, index, items.length)
+        itemsList.appendChild(row)
+      })
+
+      updateTotals()
+    }
+
+    // Add item button
+    document.getElementById('add-item').addEventListener('click', () => {
+      append({ name: '', price: '', quantity: 1 })
+      renderItems()
+
+      // Focus the new item's name input
+      const inputs = document.querySelectorAll('#items-list input[name$=".name"]')
+      if (inputs.length > 0) {
+        inputs[inputs.length - 1].focus()
+      }
+    })
+
+    // Form submit
+    document.getElementById('order-form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      const items = form.getValues('items')
+      if (items.length === 0) {
+        alert('Please add at least one item to your order.')
+        return
+      }
+
+      // Validate all items have required fields
+      let hasError = false
+      items.forEach((item) => {
+        if (!item.name || !item.price) {
+          hasError = true
+        }
+      })
+
+      if (hasError) {
+        alert('Please fill in all item details (name and price).')
+        return
+      }
+
+      await form.handleSubmit(e)
+    })
+
+    // Initial render
+    renderItems()
+  </script>
+</body>
+</html>
