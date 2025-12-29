@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2025-12-28
+## [1.0.1] - 2024-12-29
+
+### Fixed
+- Fixed syntax highlighting in code blocks - code was only showing first line due to incorrect Prism.js integration
+- Fixed website page centering - all pages now properly centered with responsive container
+
+### Changed
+- Improved SyntaxHighlighter component to use `Prism.highlight()` for proper multi-line code rendering
+- Updated Tailwind container configuration with proper centering and responsive padding
+
+---
+
+## [1.0.0] - 2024-12-28
 
 ### Added
 
@@ -116,6 +128,7 @@ For more information, visit: https://formkeeper.oxog.dev
 
 ## Version History
 
+- **1.0.1** (2024-12-29) - Bug fixes for website syntax highlighting and page centering
 - **1.0.0** (2024-12-28) - Initial stable release
 
 ---

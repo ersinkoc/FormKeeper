@@ -135,7 +135,7 @@ export function Footer() {
             </a>
           </p>
           <p className="text-sm text-muted-foreground">
-            FormKeeper v1.0.0
+            FormKeeper v1.0.1
           </p>
         </div>
       </div>
