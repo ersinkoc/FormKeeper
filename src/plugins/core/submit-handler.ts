@@ -72,6 +72,14 @@ export function createSubmitHandlerPlugin<
         if (!isValid) {
           const errors = validationEngine?.getErrors() ?? ({} as FormErrors<TValues>)
 
+          // Mark all registered fields as touched so errors are displayed
+          if (fieldRegistry) {
+            const fieldNames = fieldRegistry.getRegisteredNames()
+            for (const name of fieldNames) {
+              stateManager?.setTouched(name, true)
+            }
+          }
+
           // Focus first error if enabled
           const options = kernel.getOptions()
           if (options.shouldFocusError) {
@@ -82,6 +90,9 @@ export function createSubmitHandlerPlugin<
           if (options.onError) {
             options.onError(errors)
           }
+
+          // Reset submitting state BEFORE emitting event so React gets the correct state
+          _isSubmitting = false
 
           // Emit submit-error event
           kernel.emit({

@@ -87,6 +87,7 @@ export function useForm<TValues extends FieldValues = FieldValues>(
     const unsubscribeValidate = form.on('validate', emitStateChange)
     const unsubscribeSubmit = form.on('submit', emitStateChange)
     const unsubscribeSubmitSuccess = form.on('submit-success', emitStateChange)
+    const unsubscribeSubmitError = form.on('submit-error', emitStateChange)
     const unsubscribeReset = form.on('reset', emitStateChange)
 
     return () => {
@@ -94,6 +95,7 @@ export function useForm<TValues extends FieldValues = FieldValues>(
       unsubscribeValidate()
       unsubscribeSubmit()
       unsubscribeSubmitSuccess()
+      unsubscribeSubmitError()
       unsubscribeReset()
     }
   }, [form])

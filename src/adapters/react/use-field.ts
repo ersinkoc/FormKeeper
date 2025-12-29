@@ -77,10 +77,15 @@ export function useField(
         callback()
       })
 
+      const unsubscribeSubmitError = form.on('submit-error', () => {
+        callback()
+      })
+
       return () => {
         unsubscribeChange()
         unsubscribeBlur()
         unsubscribeValidate()
+        unsubscribeSubmitError()
       }
     },
     [form, name]
